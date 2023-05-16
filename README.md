@@ -1,1 +1,1 @@
-# AOS_Sub2_Implementaci-n
+# AOS_Sub2_Implementación
