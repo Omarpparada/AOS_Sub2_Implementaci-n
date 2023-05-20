@@ -1,0 +1,17 @@
+version: "3"
+
+services:
+    database:
+        image: mysql:5.7
+        command: "--default-authentication-plugin=mysql_native_password --lower_case_table_names=2"
+        container_name: tdw_mysql
+        ports:
+            - "3306:3306"
+        volumes:
+            - ./.docker/:/var/lib/mysql:rw
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: DDBB
+            #MYSQL_USER: root
+            MYSQL_PASSWORD: root
+        restart: on-failure
