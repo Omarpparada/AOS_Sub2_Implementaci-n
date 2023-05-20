@@ -153,7 +153,7 @@ def vehiculo__estado_get(
 
 @app.options('/vehiculos/{vehiculo_v_i_n_id}', response_model=None, tags=['Vehiculo'])
 def vehiculo__v_i_n_options(
-    vehiculo_v_i_n_id: constr(regex=r'[A-HJ-NPR-Z0-9]{17}')
+    __vehiculo_v_i_n_id: IdVehiculo
 ) -> None:
     """
     Proporciona la lista de los métodos HTTP soportados por esta ruta.
@@ -168,7 +168,7 @@ def vehiculo__v_i_n_options(
     tags=['Vehiculo'],
 )
 def vehiculo__v_i_n_get(
-    vehiculo_v_i_n_id:constr(regex=r'[A-HJ-NPR-Z0-9]{17}')
+    __vehiculo_v_i_n_id:IdVehiculo
 ) -> Union[Vehiculo, HTTPProblem]:
     """
     Obtiene un vehiculo identificado por `vehiculoVINId`
@@ -183,7 +183,7 @@ def vehiculo__v_i_n_get(
     tags=['Vehiculo'],
 )
 def delete_vehiculos_vehiculo_v_i_n_id(
-    vehiculo_v_i_n_id: constr(regex=r'[A-HJ-NPR-Z0-9]{17}')
+    __vehiculo_v_i_n_id: IdVehiculo
 ) -> Union[None, HTTPProblem]:
     """
     Elimina el vehiculo identificado por `vehiculoVINId`
