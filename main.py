@@ -22,6 +22,7 @@ from database.models import (
     VehiculosPostRequest,
     VehiculosVehiculoVINIdPutRequest,
 )
+from service import UserService
 
 app = FastAPI(
     version='1.0.0',
@@ -47,8 +48,8 @@ def vehiculo_cget(
     """
     Obtiene todos los vehiculos
     """
+    UserService().get_vehiculos()
     pass
-
 
 @app.options('/vehiculos', response_model=None, tags=['Vehiculo'])
 def vehiculo_coptions() -> list():

@@ -1,6 +1,9 @@
 from datetime import datetime
 from typing import List, Tuple
 from sqlalchemy import and_, or_, func
+from database.models import ModeloVehiculo
+
+from database.session import SessionLocal
 
 class Repository:
     def __init__(self) -> None:
@@ -8,6 +11,9 @@ class Repository:
 
     def __del__(self) -> None:
         self.db.close()
+
+    def get_vehiculos(self)-> List:
+        print(self.db.query(ModeloVehiculo).all())
 
     def create_user(self, user_in: User):
         user_created = UserEntity(**dict(user_in))

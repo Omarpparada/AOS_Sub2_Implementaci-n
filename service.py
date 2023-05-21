@@ -13,3 +13,5 @@ class UserService:
 
     def get_user_by_id(self, user_id: str):
         return self.repository.get_user_by_id(user_id)
+    def get_vehiculos(self):
+        return self.repository.get_vehiculos()
