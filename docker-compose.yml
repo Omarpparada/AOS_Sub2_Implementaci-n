@@ -11,7 +11,7 @@ services:
             - ./.docker/:/var/lib/mysql:rw
         environment:
             MYSQL_ROOT_PASSWORD: root
-            MYSQL_DATABASE: DDBB
+            MYSQL_DATABASE: vehiculos
             #MYSQL_USER: root
             MYSQL_PASSWORD: root
         restart: on-failure
