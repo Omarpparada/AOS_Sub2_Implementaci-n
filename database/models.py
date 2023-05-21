@@ -7,8 +7,26 @@ from __future__ import annotations
 from datetime import date
 from enum import Enum
 from typing import List, Optional
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import Column, String, ForeignKey, Integer, TIMESTAMP, Boolean, Date
+
 
 from pydantic import AnyUrl, BaseModel, Field, constr
+
+Base = declarative_base()
+
+class VehiculosEntity(Base):
+    __tablename__ = "tabla_vehiculos"
+
+    id_vehiculo = Column(String(17), primary_key=True)
+    marca = Column(String(45))
+    modelo = Column(String(45))
+    fecha = Column(Date)
+    estado = Column(String(45))
+    dni = Column(String(9), nullable=False)
+    class Config:
+        orm_mode = True
+    
 
 
 class DNI(BaseModel):
@@ -182,3 +200,4 @@ class Vehiculo(BaseModel):
 class VehiculosGetResponse(BaseModel):
     vehiculos: Optional[List[Vehiculo]] = Field(None, description='array de vehiculos')
     links: Optional[Links2] = Field(None, description='Enlaces de paginación')
+

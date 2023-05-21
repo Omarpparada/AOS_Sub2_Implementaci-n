@@ -23,6 +23,7 @@ from database.models import (
     VehiculosVehiculoVINIdPutRequest,
 )
 from service import UserService
+from database.interfaces import vehiculos
 
 app = FastAPI(
     version='1.0.0',
@@ -30,26 +31,30 @@ app = FastAPI(
     description='## **[AOS - 23 - Subsistema_2]** API REST para la gestión de los vehiculos de los clientes de un taller.\n',
     license={'name': 'MIT', 'url': 'https://opensource.org/licenses/MIT'},
     contact={'name': 'Equipo 7', 'url': 'https://www.etsisi.upm.es/'},
-    servers=[{'url': 'http://127.0.0.1:8000/api/v1'}],
+    servers=[{'url': 'http://127.0.0.1:8000'}],
 )
 
 
 @app.get(
     '/vehiculos',
-    response_model=VehiculosGetResponse,
+    ##response_model=VehiculosGetResponse,
+    response_model=vehiculos,
     responses={'404': {'model': HTTPProblem}}, 
     tags=['Vehiculo'],
 )
 def vehiculo_cget(
-    page: Optional[conint(ge=1)] = None,
-    order: Optional[Order] = None,
-    ordering: Optional[Ordering1] = None,
-) -> Union[VehiculosGetResponse, HTTPProblem]:
+#    page: Optional[conint(ge=1)] = None,
+ #   order: Optional[Order] = None,
+  #  ordering: Optional[Ordering1] = None,
+#) -> Union[VehiculosGetResponse, HTTPProblem]:
+):
+    print(1)
     """
     Obtiene todos los vehiculos
     """
-    UserService().get_vehiculos()
-    pass
+    vehiculo = UserService().get_vehiculos()
+    print(vehiculo.__dict__)
+    return vehiculo
 
 @app.options('/vehiculos', response_model=None, tags=['Vehiculo'])
 def vehiculo_coptions() -> list():

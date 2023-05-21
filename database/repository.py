@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import List, Tuple
 from sqlalchemy import and_, or_, func
-from database.models import ModeloVehiculo
+from database.models import VehiculosEntity
 
 from database.session import SessionLocal
 
@@ -13,13 +13,9 @@ class Repository:
         self.db.close()
 
     def get_vehiculos(self)-> List:
-        print(self.db.query(ModeloVehiculo).all())
+        prueba = self.db.query(VehiculosEntity).first()
+        print(prueba.modelo)
+        return prueba
 
-    def create_user(self, user_in: User):
-        user_created = UserEntity(**dict(user_in))
-        self.db.add(user_created)
-        self.db.commit()
-        self.db.refresh(user_created)
-        return user_created
-
+    
     
