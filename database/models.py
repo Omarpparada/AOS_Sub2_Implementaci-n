@@ -40,7 +40,6 @@ class IdVehiculo(BaseModel):
         ..., title='Identificador único del vehiculo'
     )
 
-
 class MarcaVehiculo(BaseModel):
     __root__: str = Field(..., example='Seat', title='Marca del vehiculo')
 
@@ -51,13 +50,7 @@ class ModeloVehiculo(BaseModel):
 
 class FechaVehiculo(BaseModel):
     __root__: date = Field(
-        ..., example='1998-05-15', title='Año de matriculacion del vehiculo'
-    )
-
-
-class MatriculaVehiculo(BaseModel):
-    __root__: constr(regex=r'[0-9][0-9][0-9][0-9][A-Z][A-Z][A-Z]') = Field(
-        ..., title='Matricula del vehiculo'
+        ..., example=date(1998, 5, 15), title='Año de matriculacion del vehiculo'
     )
 
 
@@ -119,15 +112,14 @@ class VehiculosPostRequest(BaseModel):
     id: IdVehiculo
     modelo: Optional[ModeloVehiculo] = None
     fecha: Optional[FechaVehiculo] = None
-    matricula: Optional[MatriculaVehiculo] = None
     Estado: Optional[EstadoVehiculo] = None
     DNI: Optional[DNI] = None
+    marca: Optional[MarcaVehiculo]= None
 
 
 class VehiculosVehiculoVINIdPutRequest(BaseModel):
     modelo: Optional[ModeloVehiculo] = None
     fecha: Optional[FechaVehiculo] = None
-    matricula: Optional[MatriculaVehiculo] = None
     Estado: Optional[EstadoVehiculo] = None
 
 
@@ -141,7 +133,6 @@ class ListaVehiculos1(BaseModel):
     marca: Optional[MarcaVehiculo] = None
     modelo: Optional[ModeloVehiculo] = None
     año: Optional[FechaVehiculo] = None
-    matricula: Optional[MatriculaVehiculo] = None
     estado: Optional[EstadoVehiculo] = None
     DNI: DNI
     links: Optional[Links] = Field(None, description='Enlaces de relación del Vehiculo')
@@ -185,7 +176,6 @@ class Vehiculo1(BaseModel):
     marca: Optional[MarcaVehiculo] = None
     modelo: Optional[ModeloVehiculo] = None
     año: Optional[FechaVehiculo] = None
-    matricula: Optional[MatriculaVehiculo] = None
     estado: Optional[EstadoVehiculo] = None
     DNI: Optional[DNI] = None
     links: Optional[Links1] = Field(

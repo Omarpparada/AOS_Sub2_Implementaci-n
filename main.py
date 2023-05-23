@@ -22,7 +22,7 @@ from database.models import (
     VehiculosPostRequest,
     VehiculosVehiculoVINIdPutRequest,
 )
-from service import UserService
+from service import VehiculosService
 from database.interfaces import vehiculos
 
 app = FastAPI(
@@ -37,36 +37,23 @@ app = FastAPI(
 
 @app.get(
     '/vehiculos',
-    ##response_model=VehiculosGetResponse,
-    response_model=vehiculos,
+    response_model=list[vehiculos],
     responses={'404': {'model': HTTPProblem}}, 
     tags=['Vehiculo'],
 )
 def vehiculo_cget(
-#    page: Optional[conint(ge=1)] = None,
- #   order: Optional[Order] = None,
-  #  ordering: Optional[Ordering1] = None,
-#) -> Union[VehiculosGetResponse, HTTPProblem]:
+   page: Optional[conint(ge=1)] = None,#TODO: Preguntar por la paginacion
+   order: Optional[Order] = None,
+   ordering: Optional[Ordering1] = Ordering1.ASC,
 ):
-    print(1)
     """
     Obtiene todos los vehiculos
     """
-    vehiculo = UserService().get_vehiculos()
-    print(vehiculo.__dict__)
-    return vehiculo
+    return VehiculosService().get_vehiculos(ordering, order)
 
-@app.options('/vehiculos', response_model=None, tags=['Vehiculo'])
-def vehiculo_coptions() -> list():
-    """
-    Proporciona la lista de los métodos HTTP soportados por esta ruta.
-    """
-    return []
-
-
-@app.post(
+@app.post(#TODO: que la api no llame a options
     '/vehiculos',
-    response_model=None,
+    response_model=vehiculos,
     responses={
         '201': {'model': Vehiculo},
         '400': {'model': HTTPProblem},
@@ -78,10 +65,19 @@ def vehiculo_post(body: VehiculosPostRequest) -> Union[None, Vehiculo, HTTPProbl
     """
     Añade un nuevo vehiculo
     """
-    pass
+    
+    return VehiculosService().post_vehiculos(body)
+
+@app.options('/vehiculos', response_model=None, tags=['Vehiculo'])
+def vehiculo_coptions() -> list():
+    """
+    Proporciona la lista de los métodos HTTP soportados por esta ruta.
+    """
+    return []
 
 
-@app.options('/vehiculos/{_d_n_i}', response_model=None, tags=['Vehiculo'])
+
+@app.options('/vehiculos/dni/{_d_n_i}', response_model=None, tags=['Vehiculo'])
 def vehiculo__d_n_i_options(d_n_i: DNI) -> None:
     """
     Proporciona la lista de los métodos HTTP soportados por esta ruta.
@@ -90,22 +86,22 @@ def vehiculo__d_n_i_options(d_n_i: DNI) -> None:
 
 
 @app.get(
-    '/vehiculos/{_d_n_i}',
-    response_model=ListaVehiculos,
+    '/vehiculos/dni/{_d_n_i}',
+    response_model=list[vehiculos],
     responses={'404': {'model': HTTPProblem}},
     tags=['Vehiculo'],
 )
 def vehiculo__d_n_i_get(
-    d_n_i: DNI
-) -> Union[ListaVehiculos, HTTPProblem]:
+    _d_n_i: str= Path(..., regex=r'[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][A-Z]'),
+) -> Union[list[vehiculos], HTTPProblem]:
     """
     Obtiene una lista vehiculo identificado por `DNI`
     """
-    pass
+    return VehiculosService().get_vehiculos_by_dni(dni=_d_n_i)
 
 
 @app.options(
-    '/vehiculos/{_d_n_i}/{_estado__vehiculo}', response_model=None, tags=['Vehiculo']
+    '/vehiculos/dni/{_d_n_i}/{_estado__vehiculo}', response_model=None, tags=['Vehiculo']
 )
 def vehiculo__d_n_i__estado_options(
     d_n_i: DNI ,
@@ -118,22 +114,22 @@ def vehiculo__d_n_i__estado_options(
 
 
 @app.get(
-    '/vehiculos/{_d_n_i}/{_estado__vehiculo}',
-    response_model=ListaVehiculos,
+    '/vehiculos/dni/{_d_n_i}/{_estado__vehiculo}',
+    response_model=list[vehiculos],
     responses={'404': {'model': HTTPProblem}},
     tags=['Vehiculo'],
 )
 def vehiculo__d_n_i__estado_get(
-    d_n_i: DNI ,
-    estado__vehiculo: EstadoVehiculo ,
-) -> Union[istaVehiculos, HTTPProblem]:
+    _estado__vehiculo: EstadoVehiculo,
+    _d_n_i: str= Path(..., regex=r'[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][A-Z]'),
+) -> Union[list[vehiculos], HTTPProblem]:
     """
     Obtiene una lista vehiculo identificado por `DNI` y `estado`
     """
-    pass
+    return VehiculosService().get_vehiculos_by_dni_and_estado(dni=_d_n_i,estado= _estado__vehiculo)
 
 
-@app.options('/vehiculos/{_estado__vehiculo}', response_model=None, tags=['Vehiculo'])
+@app.options('/vehiculos/estado/{_estado__vehiculo}', response_model=None, tags=['Vehiculo'])
 def vehiculo__estado_options(
     estado__vehiculo: EstadoVehiculo 
 ) -> None:
@@ -144,22 +140,22 @@ def vehiculo__estado_options(
 
 
 @app.get(
-    '/vehiculos/{_estado__vehiculo}',
-    response_model=ListaVehiculos,
+    '/vehiculos/estado/{estado}',
+    response_model=list[vehiculos],
     responses={'404': {'model': HTTPProblem}},
     tags=['Vehiculo'],
 )
 def vehiculo__estado_get(
-    estado__vehiculo: EstadoVehiculo 
+    estado: EstadoVehiculo 
 ) -> Union[ListaVehiculos, HTTPProblem]:
     """
     Obtiene una lista vehiculo identificado por `Estado`
     """
-    pass
+    return VehiculosService().get_vehiculos_by_estados(estado)
 
-@app.options('/vehiculos/{vehiculo_v_i_n_id}', response_model=None, tags=['Vehiculo'])
+@app.options('/vehiculos/vin/{vehiculo_v_i_n_id}', response_model=None, tags=['Vehiculo'])
 def vehiculo__v_i_n_options(
-    __vehiculo_v_i_n_id: IdVehiculo
+    __vehiculo_v_i_n_id: str=Path(..., regex=r'[A-HJ-NPR-Z0-9]{17}')
 ) -> None:
     """
     Proporciona la lista de los métodos HTTP soportados por esta ruta.
@@ -168,37 +164,38 @@ def vehiculo__v_i_n_options(
 
 
 @app.get(
-    '/vehiculos/{vehiculo_v_i_n_id}',
-    response_model=Vehiculo,
+    '/vehiculos/vin/{vin}',
+    response_model=vehiculos,
     responses={'404': {'model': HTTPProblem}},
     tags=['Vehiculo'],
 )
 def vehiculo__v_i_n_get(
-    __vehiculo_v_i_n_id:IdVehiculo
-) -> Union[Vehiculo, HTTPProblem]:
+    vin:str=Path(..., regex=r'[A-HJ-NPR-Z0-9]{17}')
+) -> Union[vehiculos, HTTPProblem]:
     """
     Obtiene un vehiculo identificado por `vehiculoVINId`
     """
-    pass
+    return VehiculosService().get_vehiculos_by_vin(vin)
 
 
-@app.delete(
-    '/vehiculos/{vehiculo_v_i_n_id}',
+@app.delete(#TODO: OTro options
+    '/vehiculos/vin/{vin}',
     response_model=None,
     responses={'404': {'model': HTTPProblem}, '422': {'model': HTTPProblem}},
     tags=['Vehiculo'],
 )
 def delete_vehiculos_vehiculo_v_i_n_id(
-    __vehiculo_v_i_n_id: IdVehiculo
+    vin: str=Path(..., regex=r'[A-HJ-NPR-Z0-9]{17}')
 ) -> Union[None, HTTPProblem]:
     """
     Elimina el vehiculo identificado por `vehiculoVINId`
     """
+    VehiculosService().delete(vin)
     pass
 
 
 @app.put(
-    '/vehiculos/{vehiculo_v_i_n_id}',
+    '/vehiculos/vin/{vehiculo_v_i_n_id}',
     response_model=None,
     responses={
         '209': {'model': Vehiculo},
@@ -209,11 +206,12 @@ def delete_vehiculos_vehiculo_v_i_n_id(
     tags=['Vehiculo'],
 )
 def vehiculo__v_i_n_put(
-    if__match: constr(regex=r'[0-9a-f]*') = Header(..., alias='If-Match'),
-    vehiculo_v_i_n_id: constr(regex=r'[A-HJ-NPR-Z0-9]{17}') = Path(..., alias='vehiculoVIN_id'),
+    # if__match: constr(regex=r'[0-9a-f]*') = Header(..., alias='If-Match'),
+    vehiculo_v_i_n_id: str=Path(..., regex=r'[A-HJ-NPR-Z0-9]{17}'),
     body: VehiculosVehiculoVINIdPutRequest = ...,
 ) -> Union[None, Vehiculo, HTTPProblem]:
     """
     Modifica el vehiculo identificado por `vehiculoVINId`.
     """
+    VehiculosService().put(body, vehiculo_v_i_n_id)
     pass
