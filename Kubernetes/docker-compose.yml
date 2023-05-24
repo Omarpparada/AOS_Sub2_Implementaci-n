@@ -1,0 +1,28 @@
+version: "3"
+
+services:
+    database:
+        image: mysql:5.7
+        command: "--default-authentication-plugin=mysql_native_password --lower_case_table_names=2"
+        container_name: aos_mysql
+        ports:
+            - "3307:3306"
+        volumes:
+            - ./.docker/:/var/lib/mysql:rw
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: vehiculos
+            MYSQL_USER: root
+            MYSQL_PASSWORD: root
+        restart: on-failure
+
+    backend:
+        build: .
+        ports:
+            - "8000:8001"
+        volumes:
+            - .:/code
+        depends_on:
+            - database
+
+  
