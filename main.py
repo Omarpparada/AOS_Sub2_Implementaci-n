@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from typing import Optional, Union
 
-from fastapi import FastAPI, Header, Path
+from fastapi import FastAPI, Header, Path, Response
 from pydantic import conint, constr
 
 from database.models import (
@@ -69,20 +69,40 @@ def vehiculo_post(body: VehiculosPostRequest) -> Union[None, Vehiculo, HTTPProbl
     return VehiculosService().post_vehiculos(body)
 
 @app.options('/vehiculos', response_model=None, tags=['Vehiculo'])
-def vehiculo_coptions() -> list():
+def vehiculo_coptions() ->None:
     """
     Proporciona la lista de los métodos HTTP soportados por esta ruta.
     """
-    return []
+    response= Response()
+    response.headers["access-control-allow-credentials"]= "False"
+    response.headers["access-control-allow-headers"]="*"
+    response.headers["access-control-allow-methods"]="GET, POST, OPTIONS"
+    response.headers["access-control-allow-origin"]="*"
+    response.headers["access-control-expose-headers"]="*, ETag"
+    response.headers["allow"]="GET, POST, OPTIONS"
+    response.headers["cache-control"]="private"
+    response.headers["connection"]="close"
+    return response
 
 
 
 @app.options('/vehiculos/dni/{_d_n_i}', response_model=None, tags=['Vehiculo'])
-def vehiculo__d_n_i_options(d_n_i: DNI) -> None:
+def vehiculo__d_n_i_options(_d_n_i: str= Path(..., regex=r'[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][A-Z]')) -> None:
+    
     """
     Proporciona la lista de los métodos HTTP soportados por esta ruta.
     """
-    pass
+    response= Response()
+    response.headers["access-control-allow-credentials"]= "False"
+    response.headers["access-control-allow-headers"]="*"
+    response.headers["access-control-allow-methods"]="GET, OPTIONS"
+    response.headers["access-control-allow-origin"]="*"
+    response.headers["access-control-expose-headers"]="*, ETag"
+    response.headers["allow"]="GET, OPTIONS"
+    response.headers["cache-control"]="private"
+    response.headers["connection"]="close"
+    return response
+    
 
 
 @app.get(
@@ -104,13 +124,23 @@ def vehiculo__d_n_i_get(
     '/vehiculos/dni/{_d_n_i}/{_estado__vehiculo}', response_model=None, tags=['Vehiculo']
 )
 def vehiculo__d_n_i__estado_options(
-    d_n_i: DNI ,
-    estado__vehiculo: EstadoVehiculo,
-) -> None:
+    _estado__vehiculo: EstadoVehiculo,
+    _d_n_i: str= Path(..., regex=r'[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][A-Z]')
+    ) -> None:
     """
     Proporciona la lista de los métodos HTTP soportados por esta ruta.
     """
-    pass
+    response= Response()
+    response.headers["access-control-allow-credentials"]= "False"
+    response.headers["access-control-allow-headers"]="*"
+    response.headers["access-control-allow-methods"]="GET, OPTIONS"
+    response.headers["access-control-allow-origin"]="*"
+    response.headers["access-control-expose-headers"]="*, ETag"
+    response.headers["allow"]="GET, OPTIONS"
+    response.headers["cache-control"]="private"
+    response.headers["connection"]="close"
+    return response
+    
 
 
 @app.get(
@@ -153,14 +183,23 @@ def vehiculo__estado_get(
     """
     return VehiculosService().get_vehiculos_by_estados(estado)
 
-@app.options('/vehiculos/vin/{vehiculo_v_i_n_id}', response_model=None, tags=['Vehiculo'])
+@app.options('/vehiculos/vin/{vin}', response_model=None, tags=['Vehiculo'])
 def vehiculo__v_i_n_options(
-    __vehiculo_v_i_n_id: str=Path(..., regex=r'[A-HJ-NPR-Z0-9]{17}')
+    vin: str=Path(..., regex=r'[A-HJ-NPR-Z0-9]{17}')
 ) -> None:
     """
     Proporciona la lista de los métodos HTTP soportados por esta ruta.
     """
-    pass
+    response= Response()
+    response.headers["access-control-allow-credentials"]= "False"
+    response.headers["access-control-allow-headers"]="*"
+    response.headers["access-control-allow-methods"]="GET, OPTIONS, PUT, DELETE"
+    response.headers["access-control-allow-origin"]="*"
+    response.headers["access-control-expose-headers"]="*, ETag"
+    response.headers["allow"]="GET, OPTIONS, PUT, DELETE"
+    response.headers["cache-control"]="private"
+    response.headers["connection"]="close"
+    return response
 
 
 @app.get(
