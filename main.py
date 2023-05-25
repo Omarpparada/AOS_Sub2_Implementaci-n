@@ -68,7 +68,7 @@ def vehiculo_post(body: VehiculosPostRequest) -> Union[None, Vehiculo, HTTPProbl
     
     return VehiculosService().post_vehiculos(body)
 
-@app.options('/vehiculos', response_model=None, tags=['Vehiculo'])
+@app.options('/vehiculos', status_code=204, response_model=None, tags=['Vehiculo'])
 def vehiculo_coptions() ->None:
     """
     Proporciona la lista de los métodos HTTP soportados por esta ruta.
