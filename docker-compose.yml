@@ -22,11 +22,11 @@ services:
                 ipv4_address: 172.25.0.2
 
     backend:
-        build: .
+        build: ./python
         ports:
             - "8000:8001"
         volumes:
-            - .:/code
+            - ./python:/code
         environment:
             PMA_HOST: database
             PMA_PORT: 3306
