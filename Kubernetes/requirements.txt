@@ -1,7 +1,0 @@
-Datetime
-Future
-Pydantic
-Uvicorn
-Fastapi
-Sqlalchemy
-Pymysql

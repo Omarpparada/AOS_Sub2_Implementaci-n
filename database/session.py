@@ -4,7 +4,7 @@ from sqlalchemy.orm import sessionmaker
 
 
 
-DATABASE = f"mysql+pymysql://root:root@127.0.0.1:3307/vehiculos"
+DATABASE = f"mysql+pymysql://root:root@172.25.0.2:3306/vehiculos"
 
 engine = create_engine(
     DATABASE,

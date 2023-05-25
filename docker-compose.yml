@@ -2,11 +2,11 @@ version: "3"
 
 services:
     database:
-        image: mysql:5.7
+        image: mysql
         command: "--default-authentication-plugin=mysql_native_password --lower_case_table_names=2"
         container_name: aos_mysql
         ports:
-            - "3307:3306"
+            - "3306:3306"
         volumes:
             - ./.docker/:/var/lib/mysql:rw
         environment:
@@ -14,4 +14,33 @@ services:
             MYSQL_DATABASE: vehiculos
             #MYSQL_USER: root
             MYSQL_PASSWORD: root
+            MYSQL_ROOT_HOST: 172.25.0.2
+ 
         restart: on-failure
+        networks:
+            hostnet:
+                ipv4_address: 172.25.0.2
+
+    backend:
+        build: .
+        ports:
+            - "8000:8001"
+        volumes:
+            - .:/code
+        environment:
+            PMA_HOST: database
+            PMA_PORT: 3306
+        depends_on:
+            - database
+        networks:
+            hostnet:
+                ipv4_address: 172.25.0.3
+networks:
+ #   driver: bridge
+    hostnet:
+        ipam:
+            config:
+                - subnet: 172.25.0.0/29
+
+
+  
