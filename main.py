@@ -86,7 +86,7 @@ def vehiculo_coptions() ->None:
 
 
 
-@app.options('/vehiculos/dni/{_d_n_i}', response_model=None, tags=['Vehiculo'])
+@app.options('/vehiculos/dni/{_d_n_i}',status_code=204, response_model=None, tags=['Vehiculo'])
 def vehiculo__d_n_i_options(_d_n_i: str= Path(..., regex=r'[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][A-Z]')) -> None:
     
     """
@@ -121,7 +121,7 @@ def vehiculo__d_n_i_get(
 
 
 @app.options(
-    '/vehiculos/dni/{_d_n_i}/{_estado__vehiculo}', response_model=None, tags=['Vehiculo']
+    '/vehiculos/dni/{_d_n_i}/{_estado__vehiculo}',status_code=204, response_model=None, tags=['Vehiculo']
 )
 def vehiculo__d_n_i__estado_options(
     _estado__vehiculo: EstadoVehiculo,
@@ -159,14 +159,23 @@ def vehiculo__d_n_i__estado_get(
     return VehiculosService().get_vehiculos_by_dni_and_estado(dni=_d_n_i,estado= _estado__vehiculo)
 
 
-@app.options('/vehiculos/estado/{_estado__vehiculo}', response_model=None, tags=['Vehiculo'])
+@app.options('/vehiculos/estado/{_estado__vehiculo}',status_code=204, response_model=None, tags=['Vehiculo'])
 def vehiculo__estado_options(
     estado__vehiculo: EstadoVehiculo 
 ) -> None:
     """
     Proporciona la lista de los métodos HTTP soportados por esta ruta.
     """
-    pass
+    response= Response()
+    response.headers["access-control-allow-credentials"]= "False"
+    response.headers["access-control-allow-headers"]="*"
+    response.headers["access-control-allow-methods"]="GET, OPTIONS"
+    response.headers["access-control-allow-origin"]="*"
+    response.headers["access-control-expose-headers"]="*, ETag"
+    response.headers["allow"]="GET, OPTIONS"
+    response.headers["cache-control"]="private"
+    response.headers["connection"]="close"
+    return response
 
 
 @app.get(
@@ -183,7 +192,7 @@ def vehiculo__estado_get(
     """
     return VehiculosService().get_vehiculos_by_estados(estado)
 
-@app.options('/vehiculos/vin/{vin}', response_model=None, tags=['Vehiculo'])
+@app.options('/vehiculos/vin/{vin}',status_code=204, response_model=None, tags=['Vehiculo'])
 def vehiculo__v_i_n_options(
     vin: str=Path(..., regex=r'[A-HJ-NPR-Z0-9]{17}')
 ) -> None:
