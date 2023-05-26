@@ -61,3 +61,5 @@ class Repository:
                 vehiculo.estado = body.Estado.name,
             self.db.add(vehiculo)
             self.db.commit()
+        return vehiculo
+        
