@@ -22,7 +22,7 @@ services:
                 ipv4_address: 172.25.0.2
 
     backend:
-        build: ./python
+        image: omarpp/aos_vehiculos
         ports:
             - "8000:8001"
         volumes:
