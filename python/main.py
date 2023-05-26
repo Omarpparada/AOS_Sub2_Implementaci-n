@@ -157,14 +157,14 @@ def vehiculo__d_n_i__estado_get(
     Obtiene una lista vehiculo identificado por `DNI` y `estado`
     """
     
-    Response.headers["access-control-allow-credentials"]= "False"
-    Response.headers["access-control-allow-headers"]="*"
-    Response.headers["access-control-allow-methods"]="GET, OPTIONS"
-    Response.headers["access-control-allow-origin"]="*"
-    Response.headers["access-control-expose-headers"]="*, ETag"
-    Response.headers["allow"]="GET, OPTIONS"
-    Response.headers["cache-control"]="private"
-    Response.headers["connection"]="close"
+    Response().headers["access-control-allow-credentials"]= "False"
+    Response().headers["access-control-allow-headers"]="*"
+    Response().headers["access-control-allow-methods"]="GET, OPTIONS"
+    Response().headers["access-control-allow-origin"]="*"
+    Response().headers["access-control-expose-headers"]="*, ETag"
+    Response().headers["allow"]="GET, OPTIONS"
+    Response().headers["cache-control"]="private"
+    Response().headers["connection"]="close"
 
     return VehiculosService().get_vehiculos_by_dni_and_estado(dni=_d_n_i,estado= _estado__vehiculo)
 
