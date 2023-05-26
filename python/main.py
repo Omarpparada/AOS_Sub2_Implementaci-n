@@ -4,9 +4,8 @@
 
 from __future__ import annotations
 
-
 from typing import Optional, Union
-from fastapi.responses import JSONResponse
+
 from fastapi import FastAPI, Header, Path, Response
 from pydantic import conint, constr
 
@@ -47,11 +46,10 @@ def vehiculo_cget(
    order: Optional[Order] = None,
    ordering: Optional[Ordering1] = Ordering1.ASC,
 ):
-    headers = vehiculo_coptions()
     """
     Obtiene todos los vehiculos
     """
-    return JSONResponse(content=VehiculosService().get_vehiculos(ordering, order), headers=headers)
+    return VehiculosService().get_vehiculos(ordering, order)
 
 @app.post(#TODO: que la api no llame a options
     '/vehiculos',
@@ -222,18 +220,6 @@ def vehiculo__v_i_n_options(
 def vehiculo__v_i_n_get(
     vin:str=Path(..., regex=r'[A-HJ-NPR-Z0-9]{17}')
 ) -> Union[vehiculos, HTTPProblem]:
-    
-    response = Response()
-    response.headers["access-control-allow-credentials"]= "False"
-    response.headers["access-control-allow-headers"]="*"
-    response.headers["access-control-allow-methods"]="GET, OPTIONS, PUT, DELETE"
-    response.headers["access-control-allow-origin"]="*"
-    response.headers["access-control-expose-headers"]="*, ETag"
-    response.headers["allow"]="GET, OPTIONS, PUT, DELETE"
-    response.headers["cache-control"]="private"
-    response.headers["connection"]="close"
-    response.send
-
     """
     Obtiene un vehiculo identificado por `vehiculoVINId`
     """
