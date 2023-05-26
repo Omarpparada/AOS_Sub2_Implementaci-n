@@ -3,12 +3,13 @@ version: "3"
 services:
     database:
         image: mysql
-        command: "--default-authentication-plugin=mysql_native_password --lower_case_table_names=2"
+        command: "--default-authentication-plugin=mysql_native_password"
         container_name: aos_mysql
         ports:
             - "3306:3306"
         volumes:
             - ./.docker/:/var/lib/mysql:rw
+            - .dump.sql:/docker-entrypoint-initdb.d
         environment:
             MYSQL_ROOT_PASSWORD: root
             MYSQL_DATABASE: vehiculos
