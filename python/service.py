@@ -30,4 +30,5 @@ class VehiculosService:
         self.repository.delete(vin)
     
     def put(self, body, vin):
-        self.repository.put(body, vin)
+        return self.repository.put(body, vin)
+        

@@ -261,5 +261,5 @@ def vehiculo__v_i_n_put(
     """
     Modifica el vehiculo identificado por `vehiculoVINId`.
     """
-    VehiculosService().put(body, vehiculo_v_i_n_id)
+    return VehiculosService().put(body, vehiculo_v_i_n_id)
     pass
