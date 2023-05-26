@@ -51,7 +51,7 @@ def vehiculo_cget(
     """
     Obtiene todos los vehiculos
     """
-    return VehiculosService().get_vehiculos(ordering, order) , JSONResponse(headers=headers)
+    return JSONResponse(content=VehiculosService().get_vehiculos(ordering, order), headers=headers)
 
 @app.post(#TODO: que la api no llame a options
     '/vehiculos',
