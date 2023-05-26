@@ -1,278 +1,45 @@
-# DEPLOYMENT
-# Deployment 1 Clientes
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Service
 metadata:
-  name: clientes-d
-  labels:
-    app: clientes
+  name: backend
 spec:
   selector:
-    matchLabels:
-      app: clientes
-  template:
-    metadata:
-      labels:
-        app: clientes
-    spec:
-      containers:
-      - image: #Poner la imagen cuando la suban
-        name: clientes
-        ports:
-        - containerPort: #Verlo en su imagen
-          name: clientes
+    app: backend
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8001
 
 ---
-# Deployment 2 vehículos (Nuestro)
 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: vehiculos-d
-  labels:
-    app: vehiculos
+  name: backend
 spec:
+  replicas: 1
   selector:
     matchLabels:
-      app: vehiculos
+      app: backend
   template:
     metadata:
       labels:
-        app: vehiculos
+        app: backend
     spec:
       containers:
-      - image: #Poner la imagen cuando la hagamos
-        name: vehiculos
-        ports:
-        - containerPort: 8000 #Verlo cuando lo creemos, creo que está el 8000
-          name: vehiculos
-
----
-# Deployment 3 Trabajos
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: trabajos-d
-  labels:
-    app: trabajos
-spec:
-  selector:
-    matchLabels:
-      app: trabajos
-  template:
-    metadata:
-      labels:
-        app: trabajos
-    spec:
-      containers:
-      - image: #Poner la imagen cuando la suban
-        name: trabajos
-        ports:
-        - containerPort: #Verlo en su imagen
-          name: trabajos
-
----
-# Deployment 4 Notificaciones
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: notificaciones-d
-  labels:
-    app: notificaciones
-spec:
-  selector:
-    matchLabels:
-      app: notificaciones
-  template:
-    metadata:
-      labels:
-        app: notificaciones
-    spec:
-      containers:
-      - image: #Poner la imagen cuando la suban
-        name: notificaciones
-        ports:
-        - containerPort: #Verlo en su imagen
-          name: notificaciones
-
----
-# Deployment 5 Facturas
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: facturas-d
-  labels:
-    app: facturas
-spec:
-  selector:
-    matchLabels:
-      app: facturas
-  template:
-    metadata:
-      labels:
-        app: facturas
-    spec:
-      containers:
-      - image: #Poner la imagen cuando la suban
-        name: facturas
-        ports:
-        - containerPort: #Verlo en su imagen
-          name: facturas
----
-# Deployment 6 Recambios
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: recambios-d
-  labels:
-    app: recambios
-spec:
-  selector:
-    matchLabels:
-      app: recambios
-  template:
-    metadata:
-      labels:
-        app: recambios
-    spec:
-      containers:
-      - image: #Poner la imagen cuando la suban
-        name: recambios
-        ports:
-        - containerPort: #Verlo en su imagen
-          name: recambios
-
----
-# Deployment 7 Logs
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: logs-d
-  labels:
-    app: logs
-spec:
-  selector:
-    matchLabels:
-      app: logs
-  template:
-    metadata:
-      labels:
-        app: logs
-    spec:
-      containers:
-      - image: #Poner la imagen cuando la suban
-        name: logs
-        ports:
-        - containerPort: #Verlo en su imagen
-          name: logs
-
----
-# SERVICES
-
-# Subsistema 1 - Clientes
-apiVersion: v1
-kind: Service
-metadata:
-  name: clientes-s
-  labels:
-    app: clientes
-spec:
-  type: NodePort
-  ports:
-    - port: 8001
-      targetPort: #Rellenar respecto a la imagen
-  selector:
-    app: clientes
----
-
-# Subsistema 2 - Vehículos (Nosotros)
-apiVersion: v1
-kind: Service
-metadata:
-  name: vehiculos-s
-  labels:
-    app: vehiculos
-spec:
-  type: NodePort
-  ports:
-    - port: 8002
-      targetPort: 8000
-  selector:
-    app: vehiculos
----
-
-# Subsistema 3 - Trabajos
-apiVersion: v1
-kind: Service
-metadata:
-  name: trabajos-s
-  labels:
-    app: trabajos
-spec:
-  type: NodePort
-  ports:
-    - port: 8003
-      targetPort: #Rellenar respecto a la imagen
-  selector:
-    app: trabajos
----
-
-# Subsistema 4 - Notificaciones
-apiVersion: v1
-kind: Service
-metadata:
-  name: notificaciones-s
-  labels:
-    app: notificaciones
-spec:
-  type: NodePort
-  ports:
-    - port: 8004
-      targetPort: #Rellenar respecto a la imagen
-  selector:
-    app: notificaciones
----
-# Subsistema 5 - Facturas
-apiVersion: v1
-kind: Service
-metadata:
-  name: facturas-s
-  labels:
-    app: facturas
-spec:
-  type: NodePort
-  ports:
-    - port: 8005
-      targetPort: #Rellenar respecto a la imagen
-  selector:
-    app: facturas
----
-# Subsistema 6 - Recambios
-apiVersion: v1
-kind: Service
-metadata:
-  name: recambios-s
-  labels:
-    app: recambios
-spec:
-  type: NodePort
-  ports:
-    - port: 8006
-      targetPort: #Rellenar respecto a la imagen
-  selector:
-    app: recambios
----
-# Subsistema 7 - Logs
-apiVersion: v1
-kind: Service
-metadata:
-  name: logs-s
-  labels:
-    app: logs
-spec:
-  type: NodePort
-  ports:
-    - port: 8007
-      targetPort: #Rellenar respecto a la imagen
-  selector:
-    app: logs
+        - name: backend
+          image: omarpp/aos_vehiculos
+          env:
+            - name: PMA_HOST
+              value: database
+            - name: PMA_PORT
+              value: "3306"
+          volumeMounts:
+            - name: python-code
+              mountPath: /code
+          ports:
+            - containerPort: 8001
+      volumes:
+        - name: python-code
+          hostPath:
+            path: ../python/  # Reemplaza '/path/to/host' con la ruta en el host al directorio python
