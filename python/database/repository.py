@@ -22,16 +22,14 @@ class Repository:
             return self.db.query(VehiculosEntity).all()
         
     def post_vehiculos(self, body):
-        vehiculo= self.db.add(VehiculosEntity(
-            id_vehiculo=body.id.__root__ ,
+        vehiculo= self.db.add(VehiculosEntity(id_vehiculo=body.id.__root__ ,
             marca = body.marca.__root__ ,
             modelo =  body.modelo.__root__ ,
             fecha = body.fecha.__root__ ,
             estado = body.Estado.name,
-            dni =body.DNI.__root__ 
-        ))
+            dni =body.DNI.__root__ ))
         self.db.commit()
-        return vehiculo
+        return self.get_vehiculos_by_vin(body.id.__root__)
     
     def get_vehiculos_by_dni(self, dni):
         return self.db.query(VehiculosEntity).where(VehiculosEntity.dni== dni).all()
