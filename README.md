@@ -16,7 +16,7 @@ Para la utilización de la imágenes, solamente es necesario encontrarse en la c
 `docker-compose up`<br> o el comando: `docker-compose up -d` si se desea ejecutar en segundo plano*.
 
 ### **_Docker compose_**
-Tras el análisis del resto de servicios se concluyen las siguientes decisiones de diseño de cara al despliegue con `docker-compose`. Debido a que prácticamente ningún grupo ha especificado el lugar donde se ha subido la imagen en docker hub, hemos creado un mock del swagger de los grupos e incluirlos en el docker-compose usando puertos distintos.
+Tras el análisis del resto de servicios se concluyen las siguientes decisiones de diseño de cara al despliegue con `docker-compose`. Debido a que prácticamente ningún grupo ha especificado el lugar donde se ha subido la imagen en docker hub, hemos creado un mock del swagger de los grupos y los incluimos en el docker-compose usando puertos distintos.
 
 Para el servicio que se quiere implementar, como hemos mencionado anteriormente, se ha usado una base de datos basada en MariaDB, conectándose al puerto 3306 con 4 vehículos de ejemplo, para mantener la persistencia, la base de datos se monta sobre la carpeta `./docker`. Además, en caso de que sea la primera que se ejecuta el `docker-compose up`, la base de datos realizará los comandos situados en `./scripts/dump.sql`.
 
