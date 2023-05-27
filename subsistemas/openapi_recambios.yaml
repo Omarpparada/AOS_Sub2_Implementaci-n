@@ -1,0 +1,695 @@
+openapi: 3.0.3
+
+info:
+  version: 1.0.0
+  title: 🚗[AOS 2023] Inventario de Recambios del taller 🚗
+  description: >
+    ## 🚘 API REST para la gestión de inventario de taller de coches
+  license:
+    name: MIT
+    url: 'https://opensource.org/licenses/MIT'
+  contact:
+    name: Escuela Técnica Superior de Ingeniería de Sistemas Informaticos
+    url: 'https://www.etsisi.upm.es/'
+    email: webmaster@etsisi.upm.es
+servers:
+  - url: http://127.0.0.1:80/api/v1
+tags:
+  - name: '⚙️Inventario'
+
+paths:
+  /recambios:
+    get:
+      summary: Obtiene todos los recambios
+      description: |
+        La siguiente tabla define los códigos de estado que puede devolver este endpoint
+        
+        | Status Code | Descripción | Motivo                             |
+        | ------------| ------------| -----------------------------------|
+        | **200**     | OK          | Listado de los recambios           |
+        | **404**     | NOT FOUND   | No hay ningun recambio             |
+      operationId: recambio_cget
+      tags: [ '⚙️Inventario' ]
+      responses:
+        '200':
+          description: Lista de recambios disponibles
+          headers:
+            ETag:
+              $ref: '#/components/headers/Etag'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Recambios:
+                    description: array de recambios
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Recambio'
+                  Links:
+                    description: Enlaces de paginación
+                    readOnly: true
+                    type: object
+                    properties:
+                      prevPage:
+                        $ref: '#/components/schemas/Link'
+                      nextPage:
+                        $ref: '#/components/schemas/Link'
+              examples:
+                recambiosExample:
+                  $ref: '#/components/examples/recambios-examples'
+        '404':
+          $ref: '#/components/responses/Response_404'
+    options:
+      summary: Proporciona la lista de los métodos HTTP soportados por esta ruta.
+      description: Devuelve una cabecera `Allow` con la lista de métodos HTTP soportados (separados por comas).
+      operationId: recambio_coptions
+      tags: [ '⚙️Inventario' ]
+      responses:
+        '204':
+          description: 'cabecera `Allow` &lt;El cuerpo de la respuesta está vacío&gt;'
+          headers:
+            Allow:
+              $ref: '#/components/headers/Allow'
+    post:
+      summary: Añade un nuevo recambio
+      description: |
+        La siguiente tabla define los códigos de estado que puede devolver este endpoint
+        
+        | Status Code | Descripción          | Motivo                                    |
+        | ------------| ---------------------| ------------------------------------------|
+        | **201**     | CREATED              | El recambio ha sido creado                |
+        | **400**     | BAD REQUEST          | El identificador único ya existe          |
+        | **422**     | UNPROCESSABLE ENTITY | Falta alguno de los atributos obligatorios|
+        |             |                      | o el valor no está permitido              |
+      tags: [ '⚙️Inventario' ]
+      operationId: recambio_post
+      requestBody:
+        $ref: '#/components/requestBodies/recambioRB'
+      responses:
+        '201':
+          description: Nuevo Recambio creado
+          headers:
+            Location:
+              $ref: '#/components/headers/Location'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Recambio'
+        '400':
+          $ref: '#/components/responses/Response_400'
+        '422':
+          $ref: '#/components/responses/Response_422' 
+
+  /recambios/{Numero_Serie}:
+    parameters:
+      - $ref: '#/components/parameters/Numero_Serie'
+    options:
+      summary: Proporciona la lista de los métodos HTTP soportados por esta ruta.
+      description: Devuelve una cabecera `Allow` con la lista de métodos HTTP soportados (separados por comas).
+      operationId: recambio_options
+      tags: [ '⚙️Inventario' ]
+      responses:
+        '204':
+          description: 'cabecera `Allow` &lt;El cuerpo de la respuesta está vacío&gt;'
+          headers:
+            Allow:
+              $ref: '#/components/headers/Allow' 
+    get:
+      summary: Obtiene un recambio identificad0 por `recambioId`
+      description: |
+        La siguiente tabla define los códigos de estado que puede devolver este endpoint
+        
+        | Status Code | Descripción | Motivo                             |
+        | ------------| ------------| -----------------------------------|
+        | **200**     | OK          | Si el recambio existe              |
+        | **404**     | NOT FOUND   | Si no existe el recambio           |
+      operationId: recambio_get
+      tags: [ '⚙️Inventario' ]
+      responses:
+        '200':
+          description: Recambio
+          headers:
+            ETag:
+              $ref: '#/components/headers/Etag'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Recambios:
+                    description: array de recambios
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Recambio'
+              examples:
+                recambioExample:
+                  $ref: '#/components/examples/recambios-busqueda-examples'
+        '404':
+          $ref: '#/components/responses/Response_404'
+    delete:
+      summary: Elimina el recambio identificado por `recambioId`
+      description: |
+        La siguiente tabla define los códigos de estado que puede devolver este endpoint
+        
+        | Status Code      | Descripción | Motivo                                    |
+        | ---------------- | ------------| ------------------------------------------|
+        | **204**          | NO CONTENT  | El recambio existía y ha sido eliminado   |
+        | **404**          | NOT FOUND   | Si el recambio no existe                  |
+      operationId: recambio_delete
+      tags: [ '⚙️Inventario' ]
+      responses:
+        '204':
+          description: Recambio eliminado &lt;Cuerpo de la respuesta vacío&gt;
+        '404':
+          $ref: '#/components/responses/Response_404'
+    put:
+      tags: [ '⚙️Inventario' ]
+      summary: Modifica el recambio identificado por `Numero_Serie`.
+      description:  |
+        La siguiente tabla define los códigos de estado que puede devolver este endpoint
+        | Status Code | Descripción         | Motivo                                        |
+        | ------------| --------------------| ----------------------------------------------|
+        | **209**     | CONTENT RETURNED    | El recambio existía y ha sido actualizado     |
+        | **404**     | NOT FOUND           | Si el recambio no existe                      |
+        | **409**     | CONFLICT            | Si existe un conflicto con el recurso         |
+        | **412**     | PRECONDITION FAILED | Si el ETag proporcionado no está actualizado  |
+        | **422**     | UNPROCESSABLE ENTITY| Valor no permitido en alguno de los atributos |
+      operationId: recambio_put
+      parameters:
+        - $ref: '#/components/parameters/ifMatchParam'
+      requestBody:
+        $ref: '#/components/requestBodies/recambioUpdate'
+      responses:
+        '209':
+          description: '`CONTENT RETURNED`: el recambio ha sido actualizado'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Recambio'
+        '404':
+          $ref: '#/components/responses/Response_404'
+        '409':
+          $ref: '#/components/responses/Response_409'
+        '412':
+          $ref: '#/components/responses/Response_412'
+        '422':
+          $ref: '#/components/responses/Response_422'
+   
+components:
+  schemas:
+    Recambio: 
+      title: '⚙️ Recambio de un artículo del taller'
+      description: >
+        Un recambio de un taller de vehículos se refiere a la sustitución de una pieza o componente
+        dañado o desgastado en un vehículo por uno nuevo o reemplazo. Los talleres de vehículos
+        ofrecen una amplia variedad de recambios para distintas marcas y modelos de vehículos,
+        desde elementos tan básicos como las bujías hasta componentes más complejos como motores y transmisiones.
+      type: object
+      properties:
+        Recambio:
+          type: object
+          required: [numero_serie, nombre, descripcion, proveedor, equivalencias, garantia, precio, iva, importe, cantidad]
+          properties:
+            numero_serie:
+              $ref: '#/components/schemas/Numero_Serie'
+            nombre:
+              $ref: '#/components/schemas/Nombre_Recambio'
+            descripcion:
+              $ref: '#/components/schemas/Descripcion_Recambio'
+            proveedor:
+              $ref: '#/components/schemas/Proveedor_Recambio'
+            equivalencias:
+              $ref: '#/components/schemas/Equivalencias_Recambio'
+            garantia:
+              $ref: '#/components/schemas/Garantia_Recambio'
+            precio: 
+              $ref: '#/components/schemas/Precio_Recambio'
+            iva:
+              $ref: '#/components/schemas/IVA_Recambio'
+            importe:
+              $ref: '#/components/schemas/Importe_Recambio'
+            cantidad: 
+              $ref: '#/components/schemas/Cantidad_Recambio'
+   
+    Numero_Serie:
+      title: 'Numero de serie'
+      description: >
+        Código alfanumérico que permite identificar un recambio
+      type: string
+      pattern: '^[A-Z]{1}[0-9]{7}-[A-Z]$'
+      example: "Z0000001-A"
+      # https://v6.fakerjs.dev/guide/
+      x-faker: helpers.regexpStyleStringParse('/^[A-Z]{1}[0-9]{7}-[A-Z]$/')
+      
+    Nombre_Recambio:
+      title: 'Nombre recambio'
+      type: string
+      example: "Kit Frenos"
+
+    Descripcion_Recambio:
+      title: 'Descripcion'
+      description: >
+        Explicación detallada de las características, funciones y especificaciones
+        técnicas de una pieza o componente de repuesto para un vehículo. Esta descripción
+        es importante para asegurarse de que el recambio es adecuado para el vehículo y 
+        para comprender su función dentro del mismo.
+      type: string
+      
+    Proveedor_Recambio:
+      title: 'Proveedor del recambio'
+      description: >
+        El proveedor de un recambio para un taller de vehículos puede ser una empresa
+        especializada en la fabricación y distribución de piezas de repuesto para automóviles
+        o bien un distribuidor que suministre los repuestos de diferentes fabricantes. 
+      type: string
+      example: "Michelin"
+      
+    Equivalencias_Recambio:
+      title: 'Equivalencias'
+      description: >
+        Las equivalencias de un recambio para un vehículo se refieren a piezas o componentes que,
+        aunque no sean exactamente iguales en diseño o especificaciones técnicas a la pieza 
+        original del vehículo, pueden ser utilizadas como reemplazo para dicha pieza.
+      type: object
+      required: [nombre, fabricante, modelo]
+      properties:
+        nombre: 
+          type: string
+          description: 'Nombre de la pieza equivalente'
+        fabricante:
+          type: string
+          description: 'Nombre del fabricante de la pieza equivalente'
+        modelo:
+          type: string
+          description: 'Modelo de vehículo compatible con la pieza equivalente'
+      example: {"nombre": "Kit Frenos EBC", "fabricante": "EBC Brakes", "modelo": "Golf GTI MK7" }
+             
+    Garantia_Recambio:
+      title: 'Garantía del recambio'
+      description: >
+        La garantía de un recambio de un vehículo es un compromiso que el fabricante o vendedor 
+        del recambio adquiere con el comprador, en el que se asegura que el recambio funcionará 
+        de manera adecuada y sin defectos durante un periodo de tiempo determinado.
+      type: string
+      example: "2 años"
+      
+    Precio_Recambio:
+      title: 'Precio'
+      description: 'Precio sin IVA asignado a cada recambio'
+      type: number
+      format: double
+      minimum: 0
+      exclusiveMinimum: true
+      example: 120.25
+      
+    IVA_Recambio:
+      title: 'IVA '
+      description: >
+        Es un tributo de carácter indirecto. Recae sobre los consumidores,
+        puesto que lo pagan al adquirir un producto o servicio: sobre el precio neto 
+        de los mismos se establece una aplicación que varía en su porcentaje.
+      type: string
+      pattern: '^[0-9]{1,2}[%]$'
+      example: '21%'
+        # https://v6.fakerjs.dev/guide/
+      x-faker: helpers.regexpStyleStringParse('^[0-9]{1,2}[%]$')
+      
+    Importe_Recambio:
+      title: 'Importe'
+      description: 'Precio final añadiendo el IVA al precio a cada recambio'
+      type: number
+      format: double
+      minimum: 0
+      exclusiveMinimum: true
+      example: 145.5
+      
+    Cantidad_Recambio:
+      title: 'Cantidad'
+      description: 'Número de unidades del recambio disponibles en el taller'
+      type: integer
+      minimum: 0
+      maximum: 10000
+      example: 200
+
+    HTTP_Problem:
+      type: object
+      externalDocs:
+        url: https://tools.ietf.org/html/rfc7807
+      description: |
+        Problem Details for HTTP APIs
+        [https://tools.ietf.org/html/rfc7807](https://tools.ietf.org/html/rfc7807)
+      properties:
+        type:
+          type: string
+          format: uri
+          description: A URI reference [RFC3986] that identifies the problem type
+        title:
+          type: string
+          description: short human-readable summary of the problem type
+        status:
+          type: number
+          description: HTTP status code
+        detail:
+          type: string
+          description: Human-readable explanation specific to this occurrence of the problem
+        instance:
+          type: string
+          format: uri
+          description: >
+            A URI reference that identifies the specific occurrence of the problem.
+            It may or may not yield further information if dereferenced.
+
+    Link:
+      description: Enlace de relación
+      title: '🔗 Link'
+      type: object
+      properties:
+        href:
+          description: URL del enlace
+          type: string
+          format: uri
+          x-faker: internet.url
+        rel:
+          description: "Relación del recurso enlazado con el actual. Contiene una lista de tipos
+                          de relaciones separados por espacio."
+          type: string
+          x-faker: lorem.words
+      example:
+        href: https://www.example.com/path/resource
+        rel: relAction1 relAction2
+
+    AllRecambios:
+      type: object
+      properties:
+        Recambio:
+          $ref: '#/components/schemas/Recambio'
+        numero_serie:
+          $ref: '#/components/schemas/Numero_Serie'
+        nombre:
+          $ref: '#/components/schemas/Nombre_Recambio'
+        descripcion:
+          $ref: '#/components/schemas/Descripcion_Recambio'
+        proveedor:
+          $ref: '#/components/schemas/Proveedor_Recambio'
+        equivalencias:
+          $ref: '#/components/schemas/Equivalencias_Recambio'
+        garantia:
+          $ref: '#/components/schemas/Garantia_Recambio'
+        precio: 
+          $ref: '#/components/schemas/Precio_Recambio'
+        iva:
+          $ref: '#/components/schemas/IVA_Recambio'
+        importe:
+          $ref: '#/components/schemas/Importe_Recambio'
+        cantidad: 
+          $ref: '#/components/schemas/Cantidad_Recambio'
+        HTTP_Problem:
+          $ref: '#/components/schemas/HTTP_Problem'
+        Link:
+          $ref: '#/components/schemas/Link'
+
+    
+  headers:
+    Etag:
+      description: "Entitiy tag (Identificador único proporcionado para validación de caché)"
+      schema:
+        type: string
+        pattern: "[0-9a-f]*"
+        example:
+          a4765bdc887fe
+    Allow:
+      description: "Lista de métodos HTTP soportados"
+      schema:
+        type: string
+      example: GET, DELETE, PUT, OPTIONS
+    Location:
+      description: '`URI` del nuevo recurso'
+      schema:
+        type: string
+        format: uri
+        x-facker: internet.url
+        example:
+          https://example.com/api/v1/recambios/
+ 
+  parameters:
+    Numero_Serie:
+      name: Numero_Serie
+      in: path
+      description: identificador del recambio correspondiente a un artículo del taller
+      required: true
+      schema:
+        $ref: '#/components/schemas/Numero_Serie'
+
+    Nombre_Recambio:
+      name: Nombre_Recambio
+      in: query
+      description: Nombre del recambio correspondiente a un artículo del taller
+      required: false
+      schema:
+        $ref: '#/components/schemas/Nombre_Recambio'
+
+    Proveedor_Recambio:
+      name: Proveedor_Recambio
+      in: query
+      description: El proveedor de un recambio para el taller de vehículos
+      required: false
+      schema:
+        $ref: '#/components/schemas/Proveedor_Recambio'
+
+    Equivalencias_Recambio:
+      name: Equivalencias_Recambio
+      in: query
+      description: equivalencias de un recambio para un vehículo
+      required: false
+      schema:
+        $ref: '#/components/schemas/Equivalencias_Recambio'
+    
+    Importe_Recambio:
+      name: Importe_Recambio
+      in: query
+      description: Precio final añadiendo el IVA al precio a cada recambio
+      required: false
+      schema:
+        $ref: '#/components/schemas/Importe_Recambio'
+
+    Cantidad_Recambio:
+      name: Cantidad_Recambio
+      in: query
+      description: Número de unidades del recambio disponibles en el taller
+      required: false
+      schema:
+        $ref: '#/components/schemas/Cantidad_Recambio'
+
+    ifMatchParam:
+      name: If-Match
+      in: header
+      description: ETag actual del recurso que se desea modificar
+      required: true
+      schema:
+        type: string
+        pattern: "[0-9a-f]*"
+
+  requestBodies:
+    recambioRB:
+      description: Información del nuevo recambio
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [numero_serie, nombre, proveedor, garantia, precio, iva, cantidad]
+            properties:
+              numero_serie:
+                $ref: '#/components/schemas/Numero_Serie'
+              nombre:
+                $ref: '#/components/schemas/Nombre_Recambio'
+              descripcion:
+                $ref: '#/components/schemas/Descripcion_Recambio'
+              proveedor:
+                $ref: '#/components/schemas/Proveedor_Recambio'
+              equivalencias:
+                $ref: '#/components/schemas/Equivalencias_Recambio'
+              garantia:
+                $ref: '#/components/schemas/Garantia_Recambio'
+              precio: 
+                $ref: '#/components/schemas/Precio_Recambio'
+              iva:
+                $ref: '#/components/schemas/IVA_Recambio'
+              importe:
+                $ref: '#/components/schemas/Importe_Recambio'
+              cantidad:
+                $ref: '#/components/schemas/Cantidad_Recambio'
+    recambioUpdate:
+      description: Nuevos atributos del recambio
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              nombre:
+                $ref: '#/components/schemas/Nombre_Recambio'
+              descripcion:
+                $ref: '#/components/schemas/Descripcion_Recambio'
+              proveedor:
+                $ref: '#/components/schemas/Proveedor_Recambio'
+              equivalencias:
+                $ref: '#/components/schemas/Equivalencias_Recambio'
+              garantia:
+                $ref: '#/components/schemas/Garantia_Recambio'
+              precio: 
+                $ref: '#/components/schemas/Precio_Recambio'
+              iva:
+                $ref: '#/components/schemas/IVA_Recambio'
+              importe:
+                $ref: '#/components/schemas/Importe_Recambio'
+              cantidad: 
+                $ref: '#/components/schemas/Cantidad_Recambio'
+          example: { "precio": 19.95, "cantidad": 50 }
+
+  responses: 
+    Response_400:
+      description: '`BAD REQUEST`: El identificador único ya existe'
+      content: 
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/HTTP_Problem'
+          examples:
+            response-http-400:
+              $ref: '#/components/examples/response-http-400'
+    Response_404:
+      description: '`NOT FOUND`: Recurso no disponbible'
+      content: 
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/HTTP_Problem'
+          examples:
+            response-http-404:
+              $ref: '#/components/examples/response-http-404'
+    Response_409:
+      description: '`CONFLICT`: Existe un conflicto con el recurso'
+      content: 
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/HTTP_Problem'
+          examples:
+            response-http-412:
+              $ref: '#/components/examples/response-http-409'
+    Response_412:
+      description: '`PRECONDITION FAILED`: El ETag proporcionado no está actualizado'
+      content: 
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/HTTP_Problem'
+          examples:
+            response-http-412:
+              $ref: '#/components/examples/response-http-412' 
+    Response_422:
+      description: '`UNPROCESSABLE ENTITY`: Falta alguno de los atributos obligatorios o son incorrectos'
+      content: 
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/HTTP_Problem'
+          examples:
+            response-http-422:
+              $ref: '#/components/examples/response-http-422'
+  
+  examples:
+    recambios-examples:
+      value:
+        recambios: 
+          - { "recambio": { 
+              "numero_serie": "Z0000001-A", 
+              "nombre": "Kit Frenos Brembo" , 
+              "descripcion": "Los kits Brembo GT | M están compuestos por discos compuestos y perforados; 
+              pinzas de aluminio de 6 pistones;  un set completo de pastillas de altas prestaciones; tubos con trenzado metálico y tornillería de gran calidad." , 
+              "proveedor": "Brembo", 
+              "equivalencias": {"nombre": "Kit Frenos EBC", "fabricante": "EBC Brakes", "modelo": "Golf GTI MK7" } , 
+              "garantia": "3 meses", 
+              "precio": "448.32", 
+              "iva": "21%", 
+              "importe": "587.50", 
+              "cantidad": "10",
+              "links": {
+                  "parent": { "href": "https://example.com/api/v1/recambios", "rel": "recambio_post recambio_cget"},
+                  "self": { "href": "https://example.com/api/v1/recambios/Z0000001-A", "rel": "recambio_get recambio_delete recambio_put" }
+              }
+            } }
+
+          - { "recambio": { 
+              "numero_serie": "Z0000003-B", 
+              "nombre": "Neumático pilot sport 4 205/55ZR16" , 
+              "descripcion": "El neumático de verano MICHELIN Pilot Sport 4 se adapta a la carretera gracias a su excelente reactividad y precisión de conducción y a su excelente duración" , 
+              "proveedor": "Michelin", 
+              "equivalencias": {"nombre": "Neumático Potenza S001 205/55", "fabricante": "Bridgestone", "modelo": "Vehículos con dimensiones en las ruedas de 205/55" } , 
+              "garantia": "No ofrece", 
+              "precio": "197.5", 
+              "iva": "21%", 
+              "importe": "250.00", 
+              "cantidad": "20",
+              "links": {
+                  "parent": { "href": "https://example.com/api/v1/recambios", "rel": "recambio_post recambio_cget"},
+                  "self": { "href": "https://example.com/api/v1/recambios/Z0000003-B", "rel": "recambio_get recambio_delete recambio_put" }
+              }
+            } }
+        links: {
+          "prevPage": { "href": "https://example.com/api/v1/recambios?page=2", "rel": "prevPage" },
+          "nextPage": { "href": "https://example.com/api/v1/recambios?page=4", "rel": "nextPage" }
+        }
+
+    recambios-busqueda-examples:
+      value:
+        recambios:
+          - { 
+            "numero_serie": "Z0000001-A", 
+            "nombre": "Kit Frenos Brembo" , 
+            "descripcion": "Los kits Brembo GT | M están compuestos por discos compuestos y perforados; 
+            pinzas de aluminio de 6 pistones;  un set completo de pastillas de altas prestaciones; tubos con trenzado metálico y tornillería de gran calidad." , 
+            "proveedor": "Brembo", 
+            "equivalencias": {"nombre": "Kit Frenos EBC", "fabricante": "EBC Brakes", "modelo": "Golf GTI MK7" } , 
+            "garantia": "3 meses", 
+            "precio": "448.32", 
+            "iva": "21%", 
+            "importe": "587.50", 
+            "cantidad": "10",
+            "links": {
+                "parent": { "href": "https://example.com/api/v1/recambios", "rel": "recambio_post recambio_cget"},
+                "self": { "href": "https://example.com/api/v1/recambios/Z0000001-A", "rel": "recambio_get recambio_delete recambio_put" }
+            } }
+        
+    response-http-400:
+      value:
+        type: https://httpstatuses.com/400
+        title: UNPROCESSABLE ENTITY
+        status: 400
+        detail: El identificador único ya existe
+        instance: about:blank
+    response-http-404:
+      value:
+        type: https://httpstatuses.com/404
+        title: NOT FOUND
+        status: 404
+        detail: El recurso solicitado no está disponible.
+        instance: about:blank
+    response-http-409:
+      value:
+        type: https://httpstatuses.com/409
+        title: CONFLICT
+        status: 409
+        detail: Existe un conflicto con el recurso
+        instance: about:blank
+    response-http-412:
+      value:
+        type: https://httpstatuses.com/412
+        title: PRECONDITION FAILED
+        status: 412
+        detail: El ETag proporcionado no está actualizado
+        instance: about:blank
+    response-http-422:
+      value:
+        type: https://httpstatuses.com/422
+        title: UNPROCESSABLE ENTITY
+        status: 422
+        detail: Falta alguno de los atributos obligatorios o contiene un valor no admitido
+        instance: about:blank
