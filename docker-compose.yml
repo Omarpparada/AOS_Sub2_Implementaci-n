@@ -79,24 +79,27 @@ services:
             - ./subsistemas/openapi_trabajos.yaml:/aos/trabajos.yaml:ro
 
     #Subsistema 4 Notificaciones 
-    mock_back_notificaciones:
-        image: stoplight/prism:latest
-        container_name: notificaciones_mock
-        command: mock --cors -h 0.0.0.0 "/aos/notificaciones.yaml"
-        ports:
-            - "4014:4010"
-        volumes:
-            - ./subsistemas/openapi_notificaciones.yaml:/aos/notificaciones.yaml:ro
+    notificaciones-backend:
+      image: acarrasco2000/aos2023_notificaciones:v1
+#      image: aos2023notificaciones.azurecr.io/azure-aos2023notificaciones:v1
+      container_name: aos2023-notificaciones
+      command: uvicorn main:app --host 0.0.0.0 --port 4013
+      ports:
+        - "4013:4013"
+      environment:
+        URL_TRABAJOS: http://localhost:4015
+      volumes:
+        - ./subsistemas/openapi_notificaciones.yaml:/aos/openapi_notificaciones.yaml:ro
 
-    frontendnotificaciones:
-        image: swaggerapi/swagger-ui:latest
-        container_name: notificaciones_front
-        ports:
-            - "8004:8080"
-        environment:
-            SWAGGER_JSON: /aos/notificaciones.yaml
-        volumes:
-            - ./subsistemas/openapi_notificaciones.yaml:/aos/notificaciones.yaml:ro    
+    notificaciones-frontend:
+      image: swaggerapi/swagger-ui:v5.0.0-alpha.5
+      container_name: aos2023-notificaciones-ui
+      ports:
+        - "8004:8080"
+      environment:
+          SWAGGER_JSON: /aos/openapi_notificaciones.yaml
+      volumes:
+        - ./subsistemas/openapi_notificaciones.yaml:/aos/openapi_notificaciones.yaml:ro
     #Subsistema 5 Facturas
     mock_back_facturas:
         image: stoplight/prism:latest
