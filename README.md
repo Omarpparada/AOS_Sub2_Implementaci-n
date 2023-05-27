@@ -9,7 +9,7 @@ _EQUIPO 7:_
 
 ### Creación de la imágen para el servicio
 
-Para la creación del servicio se ha obtado por el lenguaje de programación Python y la libreria FastAPI subido a el siguiente enlace [https://hub.docker.com/r/omarpp/aos_vehiculos] 
+Para la creación del servicio se ha obtado por el lenguaje de programación Python y la libreria FastAPI subido al siguiente enlace [https://hub.docker.com/r/omarpp/aos_vehiculos] 
 a la siguiente el cuál se conecta a una base de datos de MariaDB.
 
 Para la utilización de la imágens, solamente es necesario encontrarse en la carpeta del proyecto y ejecutar el siguiente comando:<br>
@@ -20,8 +20,10 @@ Tras el análisis del resto de servicios se concluyen las siguientes decisiones 
 
 Para el serivio que se quiere implementar, como hemos mencionado anteriormente, se ha usado una base de datos basada en MariaDB, conectandose al puerto 3306 con 4 vehículos de ejemplo, para mantener la persistencia, la base de datos se monta sobre la carpeta `./docker`. Además, en caso de que sea la primera que se ejecuta el `docker-compose up`, la base de datos realizará los comandos situados en `./pytyhon/scripts/dump.sql`.
 
-Para el servicio de vehículos, se opta por el uso del lengiuaje de programación Python y la libreria FastAPI, usando como puerto interno el 8001 pero connectando al puerto `8000` de `127.0.0.1`** usando uvicorn, la api y los recursos utilizados por este contenedor se encuentran en la carpeta `./pyton` así como  un archivo `requierements.txt` para la instalación de las dependencias.
+Para el servicio de vehículos, se opta por el uso del lengiuaje de programación Python y la libreria FastAPI, usando como puerto interno el 8001 pero connectando al puerto `8000` de `127.0.0.1`** usando uvicorn, la api y los recursos utilizados por este contenedor se encuentran en la carpeta `./python` así como  un archivo `requirements.txt` para la instalación de las dependencias.
 
 <br><br>**_*NOTA:_** En el caso de que sea la primera vez que se levanta el contenedor, el timpo de espera será mayor debido a la cración de la base de datos. Este tiempo no es apreciado en el caso de que el contenedor se levante en segundo plano. Por lo tanto, para que funcione correctamente será necesario esperar unos segundos adicionales.<br>
 
-<br>**_**NOTA:_** Para ejecutar el enlace correspondiente para usar el servicio, el enlace hay que usar la ip `127.0.0.1`, en caso contrario puede producirse un _error de CORS_.<br>
+<br>**_**NOTA:_** Para ejecutar el enlace correspondiente para usar el servicio, el enlace hay que usar la ip `127.0.0.1/docs`, en caso contrario puede producirse un _error de CORS_.<br>
+
+### Kubernetes
