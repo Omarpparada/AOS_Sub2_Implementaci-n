@@ -1,6 +1,7 @@
 version: "3"
 
 services:
+#Subsistema 2 Vehiculos (El que hemos hecho)
     database:
         image: mariadb
         container_name: aos_mysql
@@ -35,6 +36,124 @@ services:
         networks:
             hostnet:
                 ipv4_address: 172.25.0.3
+
+    #Subsistema 1 Clientes Grupo 
+   
+    mock_back_clientes:
+        image: stoplight/prism:latest
+        container_name: clientes_mock
+        command: mock --cors -h 0.0.0.0 "/aos/clientes.yml"
+        ports:
+          - "4011:4010"
+        volumes:
+            - ./subsistemas/openapi_clientes.yml:/aos/clientes.yml:ro
+
+    frontendClientes:
+        image: swaggerapi/swagger-ui:latest
+        container_name: clientes_front
+        ports:
+            - "8001:8080"
+        environment:
+            SWAGGER_JSON: /aos/clientes.yml
+        volumes:
+            - ./subsistemas/openapi_clientes.yml:/aos/clientes.yml:ro
+    
+    #Subsistema 3 Trabajos 
+    mock_back_trabajos:
+        image: stoplight/prism:latest
+        container_name: trabajos_mock
+        command: mock --cors -h 0.0.0.0 "/aos/trabajos.yaml"
+        ports:
+            - "4012:4010"
+        volumes:
+            - ./subsistemas/openapi_trabajos.yaml:/aos/trabajos.yaml:ro
+
+    frontendtrabajos:
+        image: swaggerapi/swagger-ui:latest
+        container_name: trabajos_front
+        ports:
+            - "8003:8080"
+        environment:
+            SWAGGER_JSON: /aos/trabajos.yaml
+        volumes:
+            - ./subsistemas/openapi_trabajos.yaml:/aos/trabajos.yaml:ro
+
+    #Subsistema 4 Notificaciones 
+    mock_back_notificaciones:
+        image: stoplight/prism:latest
+        container_name: notificaciones_mock
+        command: mock --cors -h 0.0.0.0 "/aos/notificaciones.yaml"
+        ports:
+            - "4014:4010"
+        volumes:
+            - ./subsistemas/openapi_notificaciones.yaml:/aos/notificaciones.yaml:ro
+
+    frontendnotificaciones:
+        image: swaggerapi/swagger-ui:latest
+        container_name: notificaciones_front
+        ports:
+            - "8004:8080"
+        environment:
+            SWAGGER_JSON: /aos/notificaciones.yaml
+        volumes:
+            - ./subsistemas/openapi_notificaciones.yaml:/aos/notificaciones.yaml:ro    
+    #Subsistema 5 Facturas
+    mock_back_facturas:
+        image: stoplight/prism:latest
+        container_name: facturas_mock
+        command: mock --cors -h 0.0.0.0 "/aos/facturas.yaml"
+        ports:
+            - "4015:4010"
+        volumes:
+            - ./subsistemas/openapi_facturas.yaml:/aos/facturas.yaml:ro
+
+    frontendfacturas:
+        image: swaggerapi/swagger-ui:latest
+        container_name: facturas_front
+        ports:
+            - "8005:8080"
+        environment:
+            SWAGGER_JSON: /aos/facturas.yaml
+        volumes:
+            - ./subsistemas/openapi_facturas.yaml:/aos/facturas.yaml:ro    
+    #Subsistema 6 Recambios
+    mock_back_recambios:
+        image: stoplight/prism:latest
+        container_name: recambios_mock
+        command: mock --cors -h 0.0.0.0 "/aos/recambios.yaml"
+        ports:
+            - "4016:4010"
+        volumes:
+            - ./subsistemas/openapi_recambios.yaml:/aos/recambios.yaml:ro
+
+    frontendrecambios:
+        image: swaggerapi/swagger-ui:latest
+        container_name: recambios_front
+        ports:
+            - "8006:8080"
+        environment:
+            SWAGGER_JSON: /aos/recambios.yaml
+        volumes:
+            - ./subsistemas/openapi_recambios.yaml:/aos/recambios.yaml:ro  
+    #Subsistema 7 Logs
+    mock_back_logs:
+        image: stoplight/prism:latest
+        container_name: logs_mock
+        command: mock --cors -h 0.0.0.0 "/aos/logs.yml"
+        ports:
+            - "4017:4010"
+        volumes:
+            - ./subsistemas/openapi_logs.yml:/aos/logs.yml:ro
+
+    frontendlogs:
+        image: swaggerapi/swagger-ui:latest
+        container_name: logs_front
+        ports:
+            - "8007:8080"
+        environment:
+            SWAGGER_JSON: /aos/logs.yml
+        volumes:
+            - ./subsistemas/openapi_logs.yml:/aos/logs.yml:ro     
 networks:
  #   driver: bridge
     hostnet:
