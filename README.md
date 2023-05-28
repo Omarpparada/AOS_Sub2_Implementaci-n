@@ -7,7 +7,7 @@ _EQUIPO 7:_
 - Alberto Guardiola Churiaque - alberto.guardiola.churiaque@alumnos.upm.es
 - Javier Rodriguez de Trujillo - j.rodriguezdetrujillo@alumnos.upm.es
 
-### Creación de la imágen para el servicio
+### Creación de la imagen para el servicio
 
 Para la creación del servicio se ha optado por el lenguaje de programación Python y la libreria FastAPI subido al siguiente enlace [https://hub.docker.com/r/omarpp/aos_vehiculos] 
 a la siguiente el cuál se conecta a una base de datos de MariaDB.
