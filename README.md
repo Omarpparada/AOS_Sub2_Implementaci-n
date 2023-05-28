@@ -25,7 +25,7 @@ Para el servicio de vehículos, se opta por el uso del lenguaje de programación
 
 <br><br>**_*NOTA:_** En el caso de que sea la primera vez que se levanta el contenedor, el tiempo de espera será mayor debido a la creación de la base de datos. Este tiempo no es apreciado en el caso de que el contenedor se levante en segundo plano. Por lo tanto, para que funcione correctamente será necesario esperar unos segundos adicionales.<br>
 
-<br>**_**NOTA:_** Para ejecutar el enlace correspondiente para usar el servicio, el enlace hay que usar la ip **`127.0.0.1/docs`**, en caso contrario puede producirse un _error de CORS_.<br>
+<br>**_**NOTA:_** Para ejecutar el enlace correspondiente para usar el servicio, el enlace hay que usar la ip **`127.0.0.1:8000/docs`**, en caso contrario puede producirse un _error de CORS_.<br>
 
 ### Kubernetes
 Para el despliegue de los servicios mediante Kubernetes se ha decidido utilizar las imagenes de las implementaciones de cada subservicio. Se ha intentado seguir en lo posible el siguiente esquema para el despliegue: ![Image text](https://github.com/Omarpparada/AOS_Sub2_Implementaci-n/blob/main/Kubernetes/esquema.png)
