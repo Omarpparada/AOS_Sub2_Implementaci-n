@@ -229,7 +229,7 @@ spec:
   type: NodePort
   ports:
     - port: 8004
-      targetPort: #Rellenar respecto a la imagen
+      targetPort: 4013 #Rellenar respecto a la imagen
   selector:
     app: notificaciones
 # ---
