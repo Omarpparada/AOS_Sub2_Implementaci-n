@@ -6,6 +6,7 @@ _EQUIPO 7:_
 - Omar Piñeiro Parada - omar.pparada@alumnos.upm.es
 - Alberto Guardiola Churiaque - alberto.guardiola.churiaque@alumnos.upm.es
 - Javier Rodriguez de Trujillo - j.rodriguezdetrujillo@alumnos.upm.es
+- Alberto Rey Cristino - alberto.rey.cristino@alumnos.upm.es
 
 ### Creación de la imagen para el servicio
 
