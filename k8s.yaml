@@ -106,7 +106,7 @@ spec:
         app: notificaciones
     spec:
       containers:
-      - image: acarrasco2000/aos2023_notificaciones:v1
+      - image: acarrasco2000/aos2023-notificaciones:v1
         name: notificaciones
         ports:
         - containerPort: 4013
