@@ -1,0 +1,279 @@
+# Deployment 2 vehículos (Nuestro)
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vehiculos-d
+  labels:
+    app: vehiculos
+spec:
+  selector:
+    matchLabels:
+      app: vehiculos
+  template:
+    metadata:
+      labels:
+        app: vehiculos
+    spec:
+      containers:
+      - image: omarpp/aos_vehiculos
+        name: vehiculos
+        ports:
+        - containerPort: 8001 #Verlo cuando lo creemos, creo que está el 8000
+          name: vehiculos
+
+---
+# Subsistema 2 - Vehículos (Nosotros)
+apiVersion: v1
+kind: Service
+metadata:
+  name: vehiculos-s
+  labels:
+    app: vehiculos
+spec:
+  loadBalancerIP: 172.25.0.3
+  type: LoadBalancer
+  ports:
+    - port: 8002
+      targetPort: 8001
+  
+  selector:
+      app: vehiculos
+---
+# DEPLOYMENT
+# Deployment 1 Clientes
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: clientes-d
+#   labels:
+#     app: clientes
+# spec:
+#   selector:
+#     matchLabels:
+#       app: clientes
+#   template:
+#     metadata:
+#       labels:
+#         app: clientes
+#     spec:
+#       containers:
+#       - image: #Poner la imagen cuando la suban
+#         name: clientes
+#         ports:
+#         - containerPort: #Verlo en su imagen
+#           name: clientes
+
+# ---
+# # Deployment 3 Trabajos
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: trabajos-d
+#   labels:
+#     app: trabajos
+# spec:
+#   selector:
+#     matchLabels:
+#       app: trabajos
+#   template:
+#     metadata:
+#       labels:
+#         app: trabajos
+#     spec:
+#       containers:
+#       - image: #Poner la imagen cuando la suban
+#         name: trabajos
+#         ports:
+#         - containerPort: #Verlo en su imagen
+#           name: trabajos
+
+# ---
+# Deployment 4 Notificaciones
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notificaciones-d
+  labels:
+    app: notificaciones
+spec:
+  selector:
+    matchLabels:
+      app: notificaciones
+  template:
+    metadata:
+      labels:
+        app: notificaciones
+    spec:
+      containers:
+      - image: acarrasco2000/aos2023-notificaciones:v1
+        name: notificaciones
+        ports:
+        - containerPort: 4013
+          name: notificaciones
+
+---
+# # Deployment 5 Facturas
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: facturas-d
+#   labels:
+#     app: facturas
+# spec:
+#   selector:
+#     matchLabels:
+#       app: facturas
+#   template:
+#     metadata:
+#       labels:
+#         app: facturas
+#     spec:
+#       containers:
+#       - image: #Poner la imagen cuando la suban
+#         name: facturas
+#         ports:
+#         - containerPort: #Verlo en su imagen
+#           name: facturas
+# ---
+# # Deployment 6 Recambios
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: recambios-d
+#   labels:
+#     app: recambios
+# spec:
+#   selector:
+#     matchLabels:
+#       app: recambios
+#   template:
+#     metadata:
+#       labels:
+#         app: recambios
+#     spec:
+#       containers:
+#       - image: #Poner la imagen cuando la suban
+#         name: recambios
+#         ports:
+#         - containerPort: #Verlo en su imagen
+#           name: recambios
+
+# ---
+# # Deployment 7 Logs
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: logs-d
+#   labels:
+#     app: logs
+# spec:
+#   selector:
+#     matchLabels:
+#       app: logs
+#   template:
+#     metadata:
+#       labels:
+#         app: logs
+#     spec:
+#       containers:
+#       - image: #Poner la imagen cuando la suban
+#         name: logs
+#         ports:
+#         - containerPort: #Verlo en su imagen
+#           name: logs
+
+# ---
+# # SERVICES
+
+# # Subsistema 1 - Clientes
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: clientes-s
+#   labels:
+#     app: clientes
+# spec:
+#   type: NodePort
+#   ports:
+#     - port: 8001
+#       targetPort: #Rellenar respecto a la imagen
+#   selector:
+#     app: clientes
+# ---
+
+# # Subsistema 3 - Trabajos
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: trabajos-s
+#   labels:
+#     app: trabajos
+# spec:
+#   type: NodePort
+#   ports:
+#     - port: 8003
+#       targetPort: #Rellenar respecto a la imagen
+#   selector:
+#     app: trabajos
+# ---
+
+# Subsistema 4 - Notificaciones
+apiVersion: v1
+kind: Service
+metadata:
+  name: notificaciones-s
+  labels:
+    app: notificaciones
+spec:
+  type: NodePort
+  ports:
+    - port: 8004
+      targetPort: 4013 #Rellenar respecto a la imagen
+  selector:
+    app: notificaciones
+# ---
+# # Subsistema 5 - Facturas
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: facturas-s
+#   labels:
+#     app: facturas
+# spec:
+#   type: NodePort
+#   ports:
+#     - port: 8005
+#       targetPort: #Rellenar respecto a la imagen
+#   selector:
+#     app: facturas
+# ---
+# # Subsistema 6 - Recambios
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: recambios-s
+#   labels:
+#     app: recambios
+# spec:
+#   type: NodePort
+#   ports:
+#     - port: 8006
+#       targetPort: #Rellenar respecto a la imagen
+#   selector:
+#     app: recambios
+# ---
+# # Subsistema 7 - Logs
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: logs-s
+#   labels:
+#     app: logs
+# spec:
+#   type: NodePort
+#   ports:
+#     - port: 8007
+#       targetPort: #Rellenar respecto a la imagen
+#   selector:
+#     app: logs
